@@ -10,7 +10,7 @@
     * *Cache de données*
 * Les **processeurs+caches** et **la mémoire** sont **connectés autour d’un bus**, dont l’accès est régi par un **arbitre de bus**.  
 <p align="center">
-    <img src="fig1.png">
+    <img src="images/fig1.png">
 </p>
 
 *Remarque : On ne modélisera que les transferts induits par les mouvements de données (et non pas les flux instructions).*
@@ -49,7 +49,7 @@ Le **bus est une ressource partagée** et un point de synchronisation du systèm
   * La mémoire qui répond aux sollicitations des caches.
 * L’architecture du bus considérée est **multiplexée** : le bus est composé de **4 nappes de fils AD/DT/CTRL** (une par cache L1 et mémoire pouvant écrire sur le bus, nommées *b_in*), aiguillées sur une unique nappe de fils AD/DT/CTRL (nommée *b_out*) qui peut-être lue par tous les composants connectés au bus. L’aiguillage est réalisé par un multiplexeur 4 × 1, commandé par le signal généré par l’arbitre de bus (cf. Figure 2).
 <p align="center">
-    <img src="fig2.png">
+    <img src="images/fig2.png">
 </p>
 
 * C’est **un point de synchronisation** : à tout instant, les données transitant sur le bus *b_out* peuvent être lues simultanément par tous les caches L1 et la mémoire. **Tous les composants connectés voient les requêtes transitant sur le bus dans le même ordre** : la séquence de requêtes WRITE(0,0);...; WRITE(0,1) sera interprétée par tous de la même façon (écriture de la valeur 0 à l’adresse 0, puis écriture de la valeur 1 à l’adresse 0), ils peuvent tous réagir au même instant en connaissant les mêmes informations.
@@ -67,7 +67,7 @@ Le chronogramme de la figure 3 montre l’**incidence de l’arbitrage** sur les
 * Ce dernier peut alors donner l’accès au bus à une autre requête s’il y en a au moins une ; sinon, il laisse l’accès à la mémoire (qui a désactivé son signal VALID...).
   
 <p align="center">
-    <img src="fig3.png">
+    <img src="images/fig3.png">
 </p>
 
 ### 1.5 Cache L1
@@ -94,7 +94,7 @@ Illustration des **transferts d’informations** induits par l’exécution des 
 * Le cache est vidé entre l’exécution des deux programmes.
 * Dans ces programmes, les mnémoniques désignent les actions décrites dans la table :
 <p align="center">
-    <img src="table1.png">
+    <img src="images/table1.png">
 </p>
 
 * Les symboles **R1**, **R2**, **R3** désignent des registres du processeur, les symboles *0* et *1* désignent les constantes de mêmes valeurs, le symboles **[0]** et **[1]** désignent les **adresses 0 et 1**.
@@ -116,3 +116,13 @@ Illustration des **transferts d’informations** induits par l’exécution des 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ld** R2, [1] *// charger la valeur se trouvant à l'adresse 1 dans le registre R2*   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **add** R3, R1, R2 *// faire l'addition des valeurs de R1 et R2 puis mettre le résultat dans R3*  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **st** R3, [0] *// écrire la valeur se trouvant dans R3 à l'adresse 0* 
+
+### 2.2 Modélisation des composants
+
+Ddécrire le comportement des différents éléments constitutifs de la plateforme avec l’outil de modélisation et vérification **NuSMV**.  
+
+On privilégiera une description *booléenne*, intégrant quelques constantes entières (minimiser les calculs sur entiers). On utilisera à profit les *tableaux* ou les *types énumérés* pour décrire des *collections de données* (nappes de fils du bus, signaux d’interface des composants).  
+
+**Étape 1 :**  
+* Définir les signaux d'interface des éléments de la plate-forme.
+* Proposer un schéma récapitulatif de l’architecture focalisé sur les interfaces de communication.

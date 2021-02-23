@@ -1,0 +1,92 @@
+-- Kimmeng Ly & Max Eliet
+-- Projet ASTRE Modélisation et Vérification de systèmes concurrents
+
+
+--*****************************************************************************
+MODULE Memory(bus_cmd, bus_data, bus_addr)
+VAR
+	data : array 0..1 of boolean;
+
+ASSIGN
+	init(data[0]) := FALSE;
+	init(data[1]) := FALSE;
+	next(data[0]) :=
+		case
+			(bus_addr = FALSE) & (bus_cmd = Wr) : 	bus_data;
+			TRUE :					data[0];
+		esac;
+	next(data[1]) :=
+		case
+			(bus_addr = TRUE) & (bus_cmd = Wr) :	bus_data;
+			TRUE :					data[1];
+		esac;
+--END Memory
+--*****************************************************************************
+
+MODULE Processor(cache_busy, cache_data)
+VAR
+	mem_req	:	{idle, Ld, St};
+	eff_addr	:	boolean;
+	register	:	boolean;
+
+ASSIGN
+  init(mem_req) := idle;
+  next(mem_req) := 
+	case
+		!cache_busy	:	{idle, Ld, St};
+		TRUE		:	mem_req;
+	esac;
+
+  init(eff_addr):= FALSE; 
+  next(eff_addr):=
+	case
+		!cache_busy	:	{FALSE,TRUE};
+		TRUE		:	eff_addr;
+	esac;
+
+  init(register):= FALSE; 
+  next(register):=
+	case
+		!cache_busy & (mem_req = St)	:	register;
+		!cache_busy & (mem_req = Ld)	:	cache_data;
+		TRUE				:	{FALSE,TRUE};
+	esac;
+--END Processor
+--*****************************************************************************
+
+MODULE Arbiter(L1_1_req)
+VAR
+	arb_gnt : boolean;
+ASSIGN
+	init(arb_gnt) := FALSE;
+	next(arb_gnt) := 
+		case
+			L1_1_req & !arb_gnt	:= TRUE;
+			TRUE			:= TRUE;
+	
+--END Arbiter
+--*****************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
