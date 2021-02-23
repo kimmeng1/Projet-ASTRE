@@ -6,6 +6,31 @@
 \usepackage{pict2e}
 \usepackage{graphicx}
 \usepackage{schemabloc}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=2mm,
+  belowskip=2mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2
+}
+
 \usetikzlibrary{quotes}
 \tikzset{%
   node distance=5cm,
@@ -612,5 +637,95 @@ On considère un système multiprocesseur à mémoire partagée. Le système est
     \end{block}}
 \end{frame}
 
+\begin{frame}[fragile]{Modélisation des composants}
+    \textbf{Architecture focalisée sur les interfaces de communication :}
+
+    \centering
+    (schéma)
+\end{frame}
+
+\begin{frame}[fragile]{Modélisation des composants}
+    \textbf{Memory}
+    \begin{lstlisting}
+        MODULE Memory(bus_cmd, bus_data, bus_addr)
+        VAR data : array 0..1 of boolean;
+        ASSIGN
+            init(data[0]) := FALSE;
+            init(data[1]) := FALSE;
+            next(data[0]) :=
+                case
+                    (bus_addr = FALSE) & (bus_cmd = Wr) : 	bus_data;
+                    TRUE :					data[0];
+                esac;
+            next(data[1]) :=
+                case
+                    (bus_addr = TRUE) & (bus_cmd = Wr) :	bus_data;
+                    TRUE :					data[1];
+                esac;
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Modélisation des composants}
+    \textbf{Arbiter}
+    \begin{lstlisting}
+        MODULE Arbiter(L1_1_req)
+        VAR
+            arb_gnt : boolean;
+        ASSIGN
+            init(arb_gnt) := FALSE;
+            next(arb_gnt) := 
+                case
+                    L1_1_req & !arb_gnt	:= TRUE;
+                    TRUE			:= TRUE;
+            
+        --END Arbiter
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Modélisation des composants}
+    \textbf{Processor}
+    \begin{lstlisting}
+        MODULE Processor(cache_busy, cache_data)
+        VAR
+            mem_req	:	        {idle, Ld, St};
+            eff_addr	:	    boolean;
+            register	:	    boolean;
+
+        ASSIGN
+        init(mem_req) :=        idle;
+        next(mem_req) := 
+            case
+                !cache_busy	:	{idle, Ld, St};
+                TRUE		:	mem_req;
+            esac;
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Modélisation des composants}
+    \addtocounter{framenumber}{-1}
+    \textbf{Processor} (suite)
+    \begin{lstlisting}
+        init(eff_addr):= FALSE; 
+        next(eff_addr):=
+            case
+                !cache_busy	:	{FALSE,TRUE};
+                TRUE		:	eff_addr;
+            esac;
+
+        init(register):= FALSE; 
+        next(register):=
+            case
+                !cache_busy & (mem_req = St)	:	register;
+                !cache_busy & (mem_req = Ld)	:	cache_data;
+                TRUE				:	{FALSE,TRUE};
+            esac;
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \centering \Large
+    \emph{Merci de votre attention !}
+    
+\end{frame}
 
 \end{document}
