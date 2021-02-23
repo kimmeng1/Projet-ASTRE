@@ -486,133 +486,15 @@ On considère un système multiprocesseur à mémoire partagée. Le système est
     \textbf{Cas multiprocesseur : boucle d’attente active / partage en lecture - \hspace*{3.8cm} écriture}
     \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
 
-        \column{.35\textwidth} % Left column and width
-        \textbf{P1b : }
+        \column{.3\textwidth} % Left column and width
+        \textbf{P1b et P2b : }
         \begin{itemize}
             \item dbt: ld R1, [0]
-        \end{itemize}
-
-        \textbf{P2b : }
-        \begin{itemize}
-            \item dbt: ld R1, [0]
-        \end{itemize}
-
-        \textbf{P3b : }
-        \begin{itemize}
-            \item ...
-        \end{itemize}
-
-        \column{.5\textwidth} % Right column and width
-        \vspace{1cm}
-        \includegraphics[scale=0.3]{archi.png}
-        
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Etude du protocole et des accès aux données partagées}
-    \addtocounter{framenumber}{-1}
-    \textbf{Cas multiprocesseur : boucle d’attente active / partage en lecture - \hspace*{3.8cm} écriture}
-        \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-        \column{.35\textwidth} % Left column and width
-        \textbf{P1b : }
-        \begin{itemize}
-            \item cmp R1, 0 
-        \end{itemize}
-
-        \textbf{P2b : }
-        \begin{itemize}
-            \item cmp R1, 0 
-        \end{itemize}
-
-        \textbf{P3b : }
-        \begin{itemize}
-            \item ...
-        \end{itemize}
-
-        \column{.5\textwidth} % Right column and width
-        \vspace{1cm}
-        \includegraphics[scale=0.3]{archi.png}
-        
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Etude du protocole et des accès aux données partagées}
-    \addtocounter{framenumber}{-1}
-    \textbf{Cas multiprocesseur : boucle d’attente active / partage en lecture - \hspace*{3.8cm} écriture}
-    \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-        \column{.35\textwidth} % Left column and width
-        \textbf{P1b : }
-        \begin{itemize}
-            \item beq dbt
-        \end{itemize}
-
-        \textbf{P2b : }
-        \begin{itemize}
-            \item beq dbt
-        \end{itemize}
-
-        \textbf{P3b : }
-        \begin{itemize}
-            \item ...
-        \end{itemize}
-
-        \column{.5\textwidth} % Right column and width
-        \vspace{1cm}
-        \includegraphics[scale=0.3]{archi.png}
-        
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Etude du protocole et des accès aux données partagées}
-    \addtocounter{framenumber}{-1}
-    \textbf{Cas multiprocesseur : boucle d’attente active / partage en lecture - \hspace*{3.8cm} écriture}
-    \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-        \column{.35\textwidth} % Left column and width
-        \textbf{P1b : }
-        \begin{itemize}
-            \item dec R1
-        \end{itemize}
-
-        \textbf{P2a : }
-        \begin{itemize}
-            \item dec R1
-        \end{itemize}
-
-        \textbf{P3a : }
-        \begin{itemize}
-            \item ld R1, [1]
-        \end{itemize}
-
-        \column{.5\textwidth} % Right column and width
-        \vspace{1cm}
-        \includegraphics[scale=0.3]{archi.png}
-        
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Etude du protocole et des accès aux données partagées}
-    \addtocounter{framenumber}{-1}
-    \textbf{Cas multiprocesseur : boucle d’attente active / partage en lecture - \hspace*{3.8cm} écriture}
-    \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-        \column{.35\textwidth} % Left column and width
-        \textbf{P1b : }
-        \begin{itemize}
-            \item st R1, [0]
-            \item sc
-        \end{itemize}
-        \textbf{P2b : }
-        \begin{itemize}
-            \item st R1, [0]
-            \item sc
-        \end{itemize}
-
-        \textbf{P3b : }
-        \begin{itemize}
-            \item ...
+	    \item 	cmp R1,0
+	    \item	beg dbt	 
+	    \item	dec R1
+	    \item	st R1, [0]
+	    \item	section critique
         \end{itemize}
 
         \column{.5\textwidth} % Right column and width
@@ -633,7 +515,7 @@ On considère un système multiprocesseur à mémoire partagée. Le système est
     \end{block}}
 
     \onslide<2>{\begin{block}{Garantir un accès exclusif aux données partagées}
-        Un vérrou pour l'accès à une donnée.
+        Un verrou pour l'accès à une donnée.
     \end{block}}
 \end{frame}
 
