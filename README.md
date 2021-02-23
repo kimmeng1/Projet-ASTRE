@@ -85,3 +85,34 @@ Le cache L1 stocke le mot préalablement demandé en lecture par le processeur a
 * (Mécanisme de **SNOOP**) Lorsqu’une requête d’écriture circule sur le bus, chaque cache connecté doit déterminer s’il dispose du mot concerné. Dans l’affirmative, il met à jour sa copie locale avec la donnée à écrire, véhiculée sur le bus.
 
 ## 2 Travail à réaliser
+
+### 2.1 Etude du protocole et des accès aux données partagées
+
+#### 2.1.1 Cas monoprocesseur
+
+Illustration des **transferts d’informations** induits par l’exécution des programmes **P1a** puis **P1b** sur le processeur 1 (les processeurs 2 et 3 sont inactifs) : 
+* Le cache est vidé entre l’exécution des deux programmes.
+* Dans ces programmes, les mnémoniques désignent les actions décrites dans la table :
+<p align="center">
+    <img src="table1.png">
+</p>
+
+* Les symboles **R1**, **R2**, **R3** désignent des registres du processeur, les symboles *0* et *1* désignent les constantes de mêmes valeurs, le symboles **[0]** et **[1]** désignent les **adresses 0 et 1**.
+
+**Effet cache**  
+**P1a** :  
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ld** R1, [0] *// charger la valeur se trouvant à l'adresse 0 dans le registre R1*   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **add** R1, R1, 1 *// incrémenter de 1 la valeur se trouvant dans R1*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **st** R1, [1] *// écrire la valeur se trouvant dans R1 à l'adresse 1*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ld** R2, [0] *// charger dans R2 la valeur se trouvant à l'adresse 0*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **add** R2, R2, 1 *// incrémenter de 1 la valeur se trouvant dans R2*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **st** R2, [0] *// écrire la valeur se trouvant dans R2 à l'adresse 0*  
+
+
+**Eviction du cache / écriture write-trough**  
+**P1b** :  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ld** R1, [0] *// charger la valeur se trouvant à l'adresse 0 dans le registre R1*   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **ld** R2, [1] *// charger la valeur se trouvant à l'adresse 1 dans le registre R2*   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **add** R3, R1, R2 *// faire l'addition des valeurs de R1 et R2 puis mettre le résultat dans R3*  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **st** R3, [0] *// écrire la valeur se trouvant dans R3 à l'adresse 0* 
