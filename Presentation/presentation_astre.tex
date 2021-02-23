@@ -654,7 +654,7 @@ On considère un système multiprocesseur à mémoire partagée. Le système est
             init(data[1]) := FALSE;
             next(data[0]) :=
                 case
-                    (bus_addr = FALSE) & (bus_cmd = Wr) : 	bus_data;
+                    (bus_addr = FALSE) & (bus_cmd = Wr) : bus_data;
                     TRUE :					data[0];
                 esac;
             next(data[1]) :=
